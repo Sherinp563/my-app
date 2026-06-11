@@ -61,8 +61,9 @@ pipeline {
                         git commit -m "Update image tag to ${IMAGE_TAG}"
                         git push https://${GIT_USER}:${GIT_TOKEN}@github.com/Sherinp563/my-app-k8s.git main
                     """
-                    }
                 }
+            }
+        }
     }
 
     post {
