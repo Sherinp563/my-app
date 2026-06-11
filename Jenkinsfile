@@ -46,24 +46,24 @@ pipeline {
 
         stage('Update Manifest') {
             steps {
-                sh """
-                    # Clone the manifests repo
-                    git clone ${GIT_REPO} k8s-repo
-                    cd k8s-repo
-
-                    # Update the image tag in deployment.yaml
-                    sed -i 's|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${IMAGE_TAG}|' k8s/deployment.yaml
-
-                    # Commit and push the change
-                    git config user.email "jenkins@ci.com"
-                    git config user.name "Jenkins"
-                    git add k8s/deployment.yaml
-                    git commit -m "Update image tag to ${IMAGE_TAG}"
-                    git push
-                """
+                withCredentials([usernamePassword(
+                    credentialsId: 'github-credentials',
+                    usernameVariable: 'GIT_USER',
+                    passwordVariable: 'GIT_TOKEN'
+                )]) {
+                    sh """
+                        git clone https://${GIT_USER}:${GIT_TOKEN}@github.com/Sherinp563/my-app-k8s.git k8s-repo
+                        cd k8s-repo
+                        sed -i 's|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${IMAGE_TAG}|' k8s/deployment.yaml
+                        git config user.email "jenkins@ci.com"
+                        git config user.name "Jenkins"
+                        git add k8s/deployment.yaml
+                        git commit -m "Update image tag to ${IMAGE_TAG}"
+                        git push https://${GIT_USER}:${GIT_TOKEN}@github.com/Sherinp563/my-app-k8s.git main
+                    """
+                }
             }
         }
-    }
 
     post {
         success {
