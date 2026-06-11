@@ -52,6 +52,7 @@ pipeline {
                     passwordVariable: 'GIT_TOKEN'
                 )]) {
                     sh """
+                        rm -rf k8s-repo
                         git clone https://${GIT_USER}:${GIT_TOKEN}@github.com/Sherinp563/my-app-k8s.git k8s-repo
                         cd k8s-repo
                         sed -i 's|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${IMAGE_TAG}|' k8s/deployment.yaml
