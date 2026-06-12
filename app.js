@@ -4,7 +4,7 @@ const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
     res.json({
-        message: 'Hello from Task 22!',
+        message: 'Hello from Task 22! -Version 2!',
         version: process.env.APP_VERSION || 'v1',
         timestamp: new Date().toISOString()
     });
